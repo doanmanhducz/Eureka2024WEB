@@ -196,6 +196,10 @@ def phishing():
 def knowledge():
     return render_template('knowledge.html')
 
+@app.route('/quest.html')
+def quest():
+    return render_template('quest.html')
+
 @app.route('/service.html', methods=["POST", "GET"])
 def service():
     if request.method == "POST":
