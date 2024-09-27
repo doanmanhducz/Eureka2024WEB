@@ -3,6 +3,10 @@ import predictor
 
 app = Flask(__name__)
 
+@app.route('/')
+def home():
+    return "Welcome to the VishCatcher API!"
+
 @app.route('/upload', methods=['POST'])
 def upload_file():
     if 'audio' not in request.files:
@@ -24,4 +28,4 @@ def upload_file():
     return '1', 200
 
 if __name__ == '__main__':
-    app.run(host='172.28.240.209', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5001, debug=True)

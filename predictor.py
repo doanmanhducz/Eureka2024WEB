@@ -15,8 +15,8 @@ model_name = "VietAI/envit5-translation"
 tokenizer_vie = AutoTokenizer.from_pretrained(model_name)
 model_vie = AutoModelForSeq2SeqLM.from_pretrained(model_name)
 
-from keras.models import load_model
-model_loaded = load_model('D:\Research\Eureka 2024\Codedemoweb\Code\Server_VishCatcher\deep_learning.h5')
+from tensorflow.keras.models import load_model
+model_loaded = load_model('D:/Research/Eureka 2024/Codedemoweb/Code/deep_learning.h5')
 
 import speech_recognition as sr
 recognizer = sr.Recognizer()

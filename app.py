@@ -9,6 +9,8 @@ import nltk
 import textdistance
 from nltk.corpus import stopwords
 import pickle
+from flask import Flask, request, jsonify
+import predictor
 
 nltk.download('stopwords')
 nltk.download('punkt')
@@ -200,11 +202,38 @@ def knowledge():
 def quest():
     return render_template('quest.html')
 
+@app.route('/checkvishing.html', methods=['GET', 'POST'])
+def checkvishing():
+    if request.method == 'POST':
+        if 'audio' not in request.files:
+            return jsonify({'result': 'No file part'}), 400
+
+        file = request.files['audio']
+        if file.filename == '':
+            return jsonify({'result': 'No selected file'}), 400
+
+        # Process the file for prediction
+        file_byte = file.read()
+        print(file_byte[:20])
+        res = predictor.predict_recording(file_byte)
+        print(res)
+
+        if res == "error":
+            return jsonify({'result': 'Could not understand audio'}), 200
+        elif res == "gg-error":
+            return jsonify({'result': 'Error with Google Speech Recognition service'}), 200
+        elif res <= 0.5:
+            return jsonify({'result': 'not vishing'}), 200
+        return jsonify({'result': 'vishing'}), 200
+
+    # Handle GET request
+    return render_template('checkvishing.html')
+
 @app.route('/service.html', methods=["POST", "GET"])
 def service():
     if request.method == "POST":
         try:
-            phone = request.form["phone_number"]        
+            phone = request.form["phone_number"]
             if phone:
                 country_code = "VN"
                 installation_id = "a1i0I--jMM3uXFb-ofc-ODmqyAGq8gHtLFxVeOdmifPv9kJWNeNABir5r72aykMM"
@@ -261,7 +290,7 @@ def install():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host='127.0.0.1', port=5000, debug=True)
 
 
 
