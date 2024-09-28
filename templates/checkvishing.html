@@ -29,33 +29,39 @@
 
         <!-- favicon -->
         <link rel="apple-touch-icon" sizes="180x180" href="/static/logo/apple-touch-icon.png">
-        <link rel="icon" type="image/png" sizes="32x32" href="/static/logo/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/static/logo/logotest2.png">
         <link rel="icon" type="image/png" sizes="16x16" href="/static/logo/favicon-16x16.png">
         <link rel="manifest" href="/static/logo/site.webmanifest">
         <meta name="msapplication-TileColor" content="#da532c">
         <meta name="theme-color" content="#ffffff">
         <link rel="icon" type="image/x-icon" href="/static/logo/favicon.ico">
         <script>
-            function handleFormSubmit(event) {
+            async function handleFormSubmit(event) {
                 event.preventDefault();
-                const formData = new FormData();
+                
                 const fileInput = document.getElementById('fileUpload');
                 const file = fileInput.files[0];
+                
+                if (!file) {
+                    alert('Please select a file.');
+                    return;
+                }
+                
+                const formData = new FormData();
                 formData.append('audio', file);
-    
-                fetch('/checkvishing', {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    console.log(data);
-                    alert(`The voice is ${data.result}`);
-                })
-                .catch(error => {
+                
+                try {
+                    const response = await fetch('/checkvishing.html', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    const result = await response.json();
+                    alert(result.result);
+                } catch (error) {
                     console.error('Error:', error);
-                    alert('Error in prediction');
-                });
+                    alert('An error occurred while uploading the file.');
+                }
             }
         </script>
     </head>
@@ -92,7 +98,7 @@
             <div class="container">
                 <nav class="navbar navbar-dark navbar-expand-lg py-0">
                     <a href="index.html" class="navbar-brand d-flex align-items-center" style="align-items: center;">
-                        <img src="/static/logo/favicon-32x32.png" alt="Logo" width="100" height="100" >
+                        <img src="/static/logo/logotest2.png" alt="Logo" width="80" height="80" >
                         <h1 class="text-dark fw-bold d-block">Phish<span class="text-secondary">Catcher</span> </h1>
                     </a>
                     <button type="button" class="navbar-toggler me-0" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
@@ -209,8 +215,9 @@
                             <div class="p-4 text-center services-content">
                                 <div class="services-content-icon">
                                     <i class="fas fa-laptop fa-7x mb-4 text-primary"></i>
-                                    <h4 class="mb-3">Thống kê - Lập tin tức</h4>
-                                    <p class="mb-4">Danh sách cuộc gọi lừa đảo sẽ được thống kê với nhiều tiêu chí khác nhau. Cộng đồng, đặc biệt là những người yếu thế, dễ bị tổn thương có thể tận dụng những thống kê này để lập tin tức, nâng cao ý thức An toàn thông tin cho người dân Việt Nam. Ngoài ra, doanh nghiệp và người dùng có thể tải bộ dữ liệu về phục vụ cho việc nghiên cứu sử dụng.</p>
+                                    <h4 class="mb-3">SharkEyes - Phát hiện Website lừa đảo</h4>
+                                    <p class="mb-4">Shark-Eyes mang lại khả năng phát hiện trang web lừa đảo với độ chính xác cao, ngay cả trước các cuộc tấn công đối kháng. Mô hình này không chỉ xuất sắc trong việc phát hiện website lừa đảo, mà còn hiệu quả trong voice phishing và email phishing. Đặc biệt, mô hình AWG chúng tôi phát triển có khả năng tạo mẫu đối kháng với tỷ lệ trốn tránh cao, chứng
+                                        minh rõ ràng hiệu suất vượt trội của mô hình Shark-Eyes.</p>
                                 </div>
                             </div>
                         </div>

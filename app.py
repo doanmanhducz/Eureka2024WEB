@@ -11,6 +11,7 @@ from nltk.corpus import stopwords
 import pickle
 from flask import Flask, request, jsonify
 import predictor
+from predictor import predict_text_recording, predict_recording
 
 nltk.download('stopwords')
 nltk.download('punkt')
@@ -206,28 +207,53 @@ def quest():
 def checkvishing():
     if request.method == 'POST':
         if 'audio' not in request.files:
+            app.logger.error('No file part in request')
             return jsonify({'result': 'No file part'}), 400
 
         file = request.files['audio']
         if file.filename == '':
+            app.logger.error('No selected file')
             return jsonify({'result': 'No selected file'}), 400
 
-        # Process the file for prediction
-        file_byte = file.read()
-        print(file_byte[:20])
-        res = predictor.predict_recording(file_byte)
-        print(res)
+        try:
+            # Process the file for prediction
+            file_byte = file.read()
+            app.logger.debug(f'File content (first 20 bytes): {file_byte[:20]}')
+            res = predictor.predict_recording(file_byte)
+            app.logger.debug(f'Prediction result: {res}')
 
-        if res == "error":
-            return jsonify({'result': 'Could not understand audio'}), 200
-        elif res == "gg-error":
-            return jsonify({'result': 'Error with Google Speech Recognition service'}), 200
-        elif res <= 0.5:
-            return jsonify({'result': 'not vishing'}), 200
-        return jsonify({'result': 'vishing'}), 200
+            if res == "error":
+                return jsonify({'result': 'Could not understand audio'}), 200
+            elif res == "gg-error":
+                return jsonify({'result': 'Error with Google Speech Recognition service'}), 200
+            elif res <= 0.5:
+                return jsonify({'result': 'not vishing'}), 200
+            return jsonify({'result': 'vishing'}), 200
+        except Exception as e:
+            app.logger.error(f'Error processing file: {e}', exc_info=True)
+            return jsonify({'result': 'Error processing file'}), 500
 
-    # Handle GET request
     return render_template('checkvishing.html')
+
+@app.route('/predict_text', methods=['POST'])
+def predict_text():
+    data = request.json
+    text = data.get('text')
+    if not text:
+        return jsonify({'error': 'No text provided'}), 400
+    prediction = predictor.predict_text_recording(text)
+    return jsonify({'prediction': prediction})
+
+@app.route('/predict_audio', methods=['POST'])
+def predict_audio():
+    if 'file' not in request.files:
+        return jsonify({'error': 'No file provided'}), 400
+    file = request.files['file']
+    audio_bytes = file.read()
+    prediction = predictor.predict_recording(audio_bytes)
+    if prediction is None:
+        return jsonify({'error': 'Error processing audio'}), 500
+    return jsonify({'prediction': prediction})
 
 @app.route('/service.html', methods=["POST", "GET"])
 def service():
