@@ -81,7 +81,6 @@ nextBtn.onclick = () => {
 
 const optionList = document.querySelector('.option-list');
 
-//getting questions and options from array
 function showQuestions(index) {
     const questionText = document.querySelector('.question-text');
     questionText.textContent = `${questions[index].numb}. ${questions[index].question}`;
@@ -92,10 +91,33 @@ function showQuestions(index) {
     optionList.innerHTML = optionTag;
 
     const option = document.querySelectorAll('.option');
-    for (let i=0; i< option.length; i++){
+    for (let i = 0; i < option.length; i++) {
         option[i].setAttribute('onclick', 'optionSelected(this)');
     }
+    const existingAudio = document.querySelector('.audio-container');
+    if (existingAudio) {
+        existingAudio.remove();
+    }
+
+    const audioContainer = document.createElement('div');
+    audioContainer.classList.add('audio-container');
+    if (questions[index].audio) {
+        const audioElement = document.createElement('audio');
+        audioElement.controls = true;
+        audioElement.src = questions[index].audio;
+        audioElement.textContent = 'Your browser does not support the audio element.';
+        audioContainer.appendChild(audioElement);
+
+        // Play the audio if autoplay is desired
+        audioElement.play().catch((error) => {
+            console.log("Autoplay failed:", error);
+        });
+    }
+
+    optionList.appendChild(audioContainer);
 }
+
+
 function optionSelected(answer) {
     let userAnswer = answer.textContent;
     let correctAnswer = questions[questionCount].answer;
@@ -155,5 +177,4 @@ function showResultBox() {
         }
     }, speed);
 }
-
 
