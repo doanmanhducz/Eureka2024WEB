@@ -6,25 +6,28 @@ let questions = [
         options : [
             "A. Không",
             "B. Có"
-        ]
+        ],
+        iframe: "https://www.vietnamairlines.com/vn/en/home"
     },
     {
         numb: 2,
-        question: "Website sau đây có phải lừa đảo hay không: gaidepfacebook.xyz ",
+        question: "Website sau đây có phải lừa đảo hay không: vietjeta1r.com ",
         answer: "B. Có",
         options : [
             "A. Không",
             "B. Có"
-        ]
+        ],
+        iframe: "https://www.vietjetair.com/vi"
     },
     {
         numb: 3,
-        question: "Website sau đây có phải lừa đảo hay không:www.facebok.com/govSOC ",
+        question: "Website sau đây có phải lừa đảo hay không: www.vebo.xyz ",
         answer: "B. Có",
         options : [
             "A. Không",
             "B. Có"
-        ]
+        ],
+        iframe: "https://football.vebo5.xyz/"
     },
     {
         numb: 4,

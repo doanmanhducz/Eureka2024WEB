@@ -94,11 +94,18 @@ function showQuestions(index) {
     for (let i = 0; i < option.length; i++) {
         option[i].setAttribute('onclick', 'optionSelected(this)');
     }
+
+    // Remove existing audio and iframe elements
     const existingAudio = document.querySelector('.audio-container');
     if (existingAudio) {
         existingAudio.remove();
     }
+    const existingIframe = document.querySelector('.iframe-container');
+    if (existingIframe) {
+        existingIframe.remove();
+    }
 
+    // Add audio element if available
     const audioContainer = document.createElement('div');
     audioContainer.classList.add('audio-container');
     if (questions[index].audio) {
@@ -113,8 +120,30 @@ function showQuestions(index) {
             console.log("Autoplay failed:", error);
         });
     }
-
     optionList.appendChild(audioContainer);
+
+    // Create iframe container if iframe exists in the question object
+    const iframeContainer = document.createElement('div');
+    iframeContainer.classList.add('iframe-container');
+    if (questions[index].iframe) {
+        console.log("Iframe URL: ", questions[index].iframe); // Log the URL to check
+
+        const iframeElement = document.createElement('iframe');
+        iframeElement.src = questions[index].iframe;
+        iframeElement.width = "600";
+        iframeElement.height = "400";
+        iframeElement.frameBorder = "0";
+        iframeElement.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+        iframeElement.allowFullscreen = true;
+        
+        // Add style to make sure it's visible
+        iframeElement.style.display = "block";
+        iframeElement.style.border = "1px solid black";
+
+        iframeContainer.appendChild(iframeElement);
+    }
+    optionList.appendChild(iframeContainer);
+    console.log("Iframe container added: ", iframeContainer);
 }
 
 

@@ -10,7 +10,8 @@
 body {
     color: #fff;
     background: #09001d;
-    overflow: hidden;
+    overflow-y: scroll;
+    overflow-x: hidden;
 }
 
 .header {
@@ -445,3 +446,6 @@ body {
     color: #fff;
 }
 
+.iframe-container {
+    margin-left: -90px;
+}
