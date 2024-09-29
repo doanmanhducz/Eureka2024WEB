@@ -227,8 +227,8 @@ def checkvishing():
             elif res == "gg-error":
                 return jsonify({'result': 'Error with Google Speech Recognition service'}), 200
             elif res <= 0.5:
-                return jsonify({'result': 'not vishing'}), 200
-            return jsonify({'result': 'vishing'}), 200
+                return jsonify({'result': 'Not Vishing'}), 200
+            return jsonify({'result': 'Vishing'}), 200
         except Exception as e:
             app.logger.error(f'Error processing file: {e}', exc_info=True)
             return jsonify({'result': 'Error processing file'}), 500

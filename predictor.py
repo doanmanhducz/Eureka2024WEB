@@ -78,12 +78,11 @@
 #     return "gg-error"
 
 from transformers import AlbertTokenizer, AlbertModel, AutoTokenizer, AutoModelForSeq2SeqLM
-import pandas as pd
 import torch
-from pydub import AudioSegment
 import numpy as np
 import io
 import speech_recognition as sr
+from pydub import AudioSegment
 from tensorflow.keras.models import load_model
 
 # Load pre-trained ALBERT model and tokenizer
@@ -102,6 +101,7 @@ model_loaded = load_model('D:/Research/Eureka2024/Codedemoweb/Code/deep_learning
 recognizer = sr.Recognizer()
 
 def extract_features(text):
+    """Extract features from text using ALBERT model."""
     inputs = tokenizer(text, return_tensors="pt", padding=True, truncation=True, max_length=512)
     with torch.no_grad():
         outputs = model(**inputs)
@@ -109,43 +109,69 @@ def extract_features(text):
     return features
 
 def predict_text_recording(inputs):
+    """Translate text and predict using the deep learning model."""
     outputs = model_vie.generate(tokenizer_vie(inputs, return_tensors="pt", padding=True).input_ids.to('cpu'), max_length=512)
     outputs = tokenizer_vie.batch_decode(outputs, skip_special_tokens=True)
-    outputs = outputs[0][4:]
-    print(outputs)
+    
+    # Check if outputs is non-empty
+    if len(outputs) == 0 or len(outputs[0]) < 5:  # Ensure there is enough data to slice
+        print("Error: Translated text is empty or too short.")
+        return "error"
+    
+    outputs = outputs[0][4:]  # Extract translated content
+    print(f"Translated Text: {outputs}")
 
-    text = outputs
-    feature = extract_features(text)
-    input_data = [feature]
-    input_data = np.array(input_data)
-
+    # Feature extraction and model prediction
+    feature = extract_features(outputs)
+    input_data = np.array([feature])
+    
     res = model_loaded.predict(input_data)
     return res[0]
 
-def decode_audio(audio_bytes):
+
+def decode_audio(audio_bytes, file_format="mp4"):
+    """Decode audio bytes and convert to wav format."""
     try:
-        print("decode_audio: ", audio_bytes[:20])
-        audio_segment = AudioSegment.from_file(io.BytesIO(audio_bytes), format="mp4")
-        wav_audio_bytes = audio_segment.export(format="wav").read()
-        recognizer = sr.Recognizer()
-        with sr.AudioFile(io.BytesIO(wav_audio_bytes)) as source:
-            audio_data = recognizer.record(source)
-        return audio_data
+        print("decode_audio: ", audio_bytes[:20])  # Debug: Display the first 20 bytes of audio
+        
+        # Ensure correct format is passed to the decoder
+        if file_format not in ["mp3", "mp4"]:
+            raise ValueError("Unsupported audio format")
+        
+        audio_segment = AudioSegment.from_file(io.BytesIO(audio_bytes), format=file_format)
+        
+        if len(audio_segment) == 0:
+            raise ValueError("Decoded audio segment is empty")
+        
+        wav_audio = io.BytesIO()
+        audio_segment.export(wav_audio, format="wav")  # Export to wav format
+        wav_audio.seek(0)  # Reset pointer to the start
+        return wav_audio
     except Exception as e:
         print(f"Error decoding audio: {e}")
         return None
-
-def predict_recording(input):
+    
+def predict_recording(input, file_format="mp4"):
+    """Process the audio, recognize text, and predict vishing."""
     try:
-        audio_data = decode_audio(input)
-        if audio_data is None:
+        wav_audio = decode_audio(input, file_format)
+        if wav_audio is None:
             return "error"
+        
+        # Recognize speech
+        with sr.AudioFile(wav_audio) as source:
+            audio_data = recognizer.record(source)
         text = recognizer.recognize_google(audio_data, language='vi-VN')
+        
+        # Predict based on recognized text
         res = predict_text_recording(text)
         return res
     except sr.UnknownValueError:
         print("Could not understand audio")
         return "error"
     except sr.RequestError as e:
-        print(f"Could not request results from Google Speech Recognition service; {e}")
+        print(f"Error with Google Speech Recognition service: {e}")
         return "gg-error"
+    except Exception as e:
+        print(f"General error: {e}")
+        return "error"
