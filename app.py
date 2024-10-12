@@ -259,7 +259,7 @@ def predict_audio():
 def service():
     if request.method == "POST":
         try:
-            phone = request.form["phone_number"]
+            phone = request.form.get("phone_number")  # Dùng .get để tránh KeyError nếu không có giá trị
             if phone:
                 country_code = "VN"
                 installation_id = "a1i0I--jMM3uXFb-ofc-ODmqyAGq8gHtLFxVeOdmifPv9kJWNeNABir5r72aykMM"
@@ -270,45 +270,48 @@ def service():
                     if name_value:
                         print(name_value)
                 except KeyError:
-                    # Handling the specific exception
                     name_value = "Đây là SĐT Bình thường"
-                # print(response['data'][0]['name'])
-                print(name_value)
-                print(response)
-                # print(response)
-                # Accessing the 'name' value
-                # name_value = response['data']['data'][0]['name']
                 return render_template('service.html', result1=name_value)
-        except:
-            mail = request.form["email"]
-            print(mail)
-            
-            detected_lang = detect(mail)
-            if detected_lang == "en":
-                f_en = extract_feature(mail)
-                f_en_np = np.array([f_en])
-                predict = rf.predict(f_en_np)
-                print(predict)
-            elif detected_lang == "vi":
-                inputs = ['vi: '+mail]
-                outputs = model.generate(tokenizer(inputs, return_tensors="pt", padding=True).input_ids.to('cpu'), max_length=512)
-                output = tokenizer.batch_decode(outputs, skip_special_tokens=True)
-                output = output[0]
-                f_vi = extract_feature(output[4:])
-                f_vi_np = np.array([f_vi])
-                predict = rf.predict(f_vi_np)
-                print(predict) 
             else:
-                predict = [-1]; 
-            if predict[0] == 1: 
-                result = "Đây là Email Lừa đảo"
-            elif predict[0] == 0: 
-                result = "Đây là Email Bình thường"
-            else:
-                result = "Ngôn ngữ không hợp lệ"
-            return render_template('service.html', result2=result)
+                # Nếu số điện thoại trống thì xử lý email
+                mail = request.form.get("email")  # Kiểm tra email
+                if not mail:
+                    return render_template('service.html', error="Vui lòng nhập số điện thoại hoặc email")
+
+                print(mail)
+                
+                detected_lang = detect(mail)
+                if detected_lang == "en":
+                    f_en = extract_feature(mail)
+                    f_en_np = np.array([f_en])
+                    predict = rf.predict(f_en_np)
+                    print(predict)
+                elif detected_lang == "vi":
+                    inputs = ['vi: ' + mail]
+                    outputs = model.generate(tokenizer(inputs, return_tensors="pt", padding=True).input_ids.to('cpu'), max_length=512)
+                    output = tokenizer.batch_decode(outputs, skip_special_tokens=True)
+                    output = output[0]
+                    f_vi = extract_feature(output[4:])
+                    f_vi_np = np.array([f_vi])
+                    predict = rf.predict(f_vi_np)
+                    print(predict)
+                else:
+                    predict = [-1]
+                
+                if predict[0] == 1: 
+                    result = "Đây là Email Lừa đảo"
+                elif predict[0] == 0: 
+                    result = "Đây là Email Bình thường"
+                else:
+                    result = "Ngôn ngữ không hợp lệ"
+                
+                return render_template('service.html', result2=result)
+        except Exception as e:
+            print(f"Lỗi: {e}")
+            return render_template('service.html', error="Đã xảy ra lỗi khi xử lý yêu cầu")
     else:
         return render_template('service.html')
+
 
 @app.route('/install.html')
 def install():
