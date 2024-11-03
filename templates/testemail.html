@@ -128,10 +128,10 @@
                 <div class="text-center mx-auto pb-5 wow fadeIn" data-wow-delay=".3s" style="max-width: 600px;">
                     <h5 class="text-primary">Kiểm tra Nội dung Email</h5>
                     <h4 class="mt-3">Tính năng kiểm tra Email giả mạo</h4>
-                    <form method="post" action="/testemail">
+                    <form method="post" action="/testemail.html">
                         <div class="mb-3">
                             <label class="form-label">Nhập nội dung Email cần kiểm tra</label>
-                            <textarea class="form-control" name="emailText" rows="10" style="height: 400px;"></textarea>
+                            <textarea class="form-control" name="emailText" rows="10" style="height: 400px;">{{ emailText }}</textarea>
                             <button class="btn bg-primary text-white py-3 px-5 mt-3" type="submit">Kiểm tra</button>
                         </div>
                     </form>

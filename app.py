@@ -12,7 +12,7 @@ import pickle
 from flask import Flask, request, jsonify
 import predictor
 from predictor import predict_text_recording, predict_recording
-# import testmail
+import testmail
 
 nltk.download('stopwords')
 nltk.download('punkt')
@@ -313,14 +313,14 @@ def service():
     # else:
         return render_template('service.html')
     
-@app.route('/testemail.html')
+@app.route('/testemail.html', methods=['GET', 'POST'])
 def test_email():
-    # if request.method == 'POST':
-    #     email_text = request.form['emailText']
-    #     result = testmail.process_email(email_text)
-    #     return render_template('testemail.html', result2=result)
-    return render_template('testemail.html')
-
+    email_text = ""
+    result = ""
+    if request.method == 'POST':
+        email_text = request.form['emailText']
+        result = testmail.process_email(email_text)
+    return render_template('testemail.html', emailText=email_text, result2=result)
 
 @app.route('/install.html')
 def install():
@@ -328,7 +328,9 @@ def install():
 
 
 if __name__ == "__main__":
-    app.run(host='127.0.0.1', port=5000, debug=True)
+    app.run(debug=True)
+
+#host='127.0.0.1', port=5000, debug=True
 
 
 
