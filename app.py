@@ -313,14 +313,15 @@ def service():
     # else:
         return render_template('service.html')
     
-@app.route('/testemail.html', methods=['GET', 'POST'])
+@app.route('/testemail', methods=['POST'])
 def test_email():
-    email_text = ""
-    result = ""
-    if request.method == 'POST':
-        email_text = request.form['emailText']
-        result = testmail.process_email(email_text)
-    return render_template('testemail.html', emailText=email_text, result2=result)
+    email_text = request.form['emailText']
+    result = testmail.process_email(email_text)
+    return jsonify({'result2': result})
+
+@app.route('/testemail.html', methods=['GET'])
+def test_email_page():
+    return render_template('testemail.html')
 
 @app.route('/install.html')
 def install():

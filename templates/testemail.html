@@ -1,162 +1,407 @@
 <!DOCTYPE html>
 <html lang="en">
 
-    <head>
-        <meta charset="utf-8">
-        <title>TRANG CHỦ - PhishCatcher</title>
-        <meta content="width=device-width, initial-scale=1.0" name="viewport">
-        <meta content="" name="keywords">
-        <meta content="" name="description">
+<head>
+    <meta charset="utf-8">
+    <title>TRANG CHỦ - PhishCatcher</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
 
-        <!-- Google Web Fonts -->
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Saira:wght@500;600;700&display=swap" rel="stylesheet"> 
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Saira:wght@500;600;700&display=swap"
+        rel="stylesheet">
 
-        <!-- Icon Font Stylesheet -->
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
 
-        <!-- Libraries Stylesheet -->
-        <link href="/static/lib/animate/animate.min.css" rel="stylesheet">
-        <link href="/static/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <!-- Libraries Stylesheet -->
+    <link href="/static/lib/animate/animate.min.css" rel="stylesheet">
+    <link href="/static/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
 
-        <!-- Customized Bootstrap Stylesheet -->
-        <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
 
-        <!-- Template Stylesheet -->
-        <link href="/static/css/style.css" rel="stylesheet">
+    <!-- Template Stylesheet -->
+    <link href="/static/css/style.css" rel="stylesheet">
 
-        <!-- favicon -->
-        <link rel="apple-touch-icon" sizes="180x180" href="/static/logo/apple-touch-icon.png">
-        <link rel="icon" type="image/png" sizes="32x32" href="/static/logo/logotest2.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="/static/logo/favicon-16x16.png">
-        <link rel="manifest" href="/static/logo/site.webmanifest">
-        <meta name="msapplication-TileColor" content="#da532c">
-        <meta name="theme-color" content="#ffffff">
-        <link rel="icon" type="image/x-icon" href="/static/logo/favicon.ico">
-    </head>
+    <!-- favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/static/logo/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/logo/logotest2.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/static/logo/favicon-16x16.png">
+    <link rel="manifest" href="/static/logo/site.webmanifest">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="icon" type="image/x-icon" href="/static/logo/favicon.ico">
 
-    <body>
-        <!-- Spinner Start -->
-        <div id="spinner" class="show position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
-            <div class="spinner-grow text-primary" role="status"></div>
+    <style>
+        /* #notification {
+            display: none;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #f44336;
+            color: white;
+            padding: 16px;
+            border-radius: 4px;
+            z-index: 1000;
+        } */
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 25%;
+            top: 25%;
+            width: 30%;
+            height: 30%;
+            overflow: auto;
+            /*result background*/
+            background-color: white;
+            border: 1px solid red;
+            border-radius: 10px;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            width: 50%;
+        }
+
+        .modal-content {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            /*Result background*/
+            background-color: white;
+            margin: 15px auto auto auto;
+            padding: 20px;
+            width: 80%;
+            border: none !important;
+        }
+
+        .modal-content h1 {
+            font-size: 2.4rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .modal-content p {
+            color: red;
+            font-size: 1.6rem;
+            font-weight: 500;
+            margin-top: 10px;
+        }
+
+        .close {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* here */
+        #waitingMessage {
+            display: none;
+            position: fixed;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgb(193, 218, 208, 0.6);
+            color: white;
+            padding: 40px;
+            border-radius: 5px;
+            z-index: 1000;
+        }
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+            border-width: .3rem;
+        }
+
+        .waiting-note {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Spinner Start -->
+    <div id="spinner"
+        class="show position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+        <div class="spinner-grow text-primary" role="status"></div>
+    </div>
+    <!-- Spinner End -->
+
+    <!-- Topbar Start -->
+    <div class="container-fluid bg-dark py-2 d-none d-md-flex">
+        <div class="container">
+            <div class="d-flex justify-content-between topbar">
+                <div class="top-info">
+                    <small class="me-3 text-white-50"><a href="#"><i
+                                class="fas fa-map-marker-alt me-2 text-secondary"></i></a>Ho Chi Minh City, Viet
+                        Nam</small>
+                    <small class="me-3 text-white-50"><a href="#"><i
+                                class="fas fa-envelope me-2 text-secondary"></i></a>PhishCatcher@gmail.com</small>
+                </div>
+                <div id="note" class="text-secondary d-none d-xl-flex"><small>Note: Hãy luôn cảnh giác trên không gian
+                        mạng</small></div>
+                <div class="top-link">
+                    <a href="" class="bg-light nav-fill btn btn-sm-square rounded-circle"><i
+                            class="fab fa-facebook-f text-primary"></i></a>
+                    <a href="" class="bg-light nav-fill btn btn-sm-square rounded-circle"><i
+                            class="fab fa-twitter text-primary"></i></a>
+                    <a href="" class="bg-light nav-fill btn btn-sm-square rounded-circle"><i
+                            class="fab fa-instagram text-primary"></i></a>
+                    <a href="" class="bg-light nav-fill btn btn-sm-square rounded-circle me-0"><i
+                            class="fab fa-linkedin-in text-primary"></i></a>
+                </div>
+            </div>
         </div>
-        <!-- Spinner End -->
+    </div>
+    <!-- Topbar End -->
 
-        <!-- Topbar Start -->
-        <div class="container-fluid bg-dark py-2 d-none d-md-flex">
-            <div class="container">
-                <div class="d-flex justify-content-between topbar">
-                    <div class="top-info">
-                        <small class="me-3 text-white-50"><a href="#"><i class="fas fa-map-marker-alt me-2 text-secondary"></i></a>Ho Chi Minh City, Viet Nam</small>
-                        <small class="me-3 text-white-50"><a href="#"><i class="fas fa-envelope me-2 text-secondary"></i></a>PhishCatcher@gmail.com</small>
+    <!-- Navbar Start -->
+    <div class="container-fluid " style="background-color: #FFE4E1;">
+        <div class="container">
+            <nav class="navbar navbar-dark navbar-expand-lg py-0">
+                <a href="index.html" class="navbar-brand d-flex align-items-center" style="align-items: center;">
+                    <img src="/static/logo/logotest2.png" alt="Logo" width="80" height="80">
+                    <h1 class="text-dark fw-bold d-block">Phish<span class="text-secondary">Catcher</span> </h1>
+                </a>
+                <button type="button" class="navbar-toggler me-0" data-bs-toggle="collapse"
+                    data-bs-target="#navbarCollapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse bg-transparent" id="navbarCollapse">
+                    <div class="navbar-nav ms-auto mx-xl-auto p-0">
+                        <a href="index.html" class="nav-item nav-link active text-secondary" style="color :black">Trang
+                            chủ</a>
+                        <a href="about.html" class="nav-item nav-link" style="color :black">Giới thiệu</a>
+                        <div class="nav-item dropdown">
+                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown "
+                                style="color :black">Tính năng</a>
+                            <div class="dropdown-menu rounded">
+                                <a href="testemail.html" class="dropdown-item">Kiểm tra Email lừa đảo </a>
+                                <a href="service.html" class="dropdown-item">Kiểm tra SĐT lừa đảo</a>
+                                <a href="checkvishing.html" class="dropdown-item">Kiểm tra cuộc gọi lừa đảo</a>
+                                <a href="report.html" class="dropdown-item">Mô hình Shark-Eyes</a>
+                                <a href="thongke.html" class="dropdown-item">Thống kê</a>
+                                <a href="blacklist.html" class="dropdown-item">Danh sách Phishing website</a>
+                            </div>
+                        </div>
+                        <div class="nav-item dropdown">
+                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"
+                                style="color :black">Hữu ích</a>
+                            <div class="dropdown-menu rounded">
+                                <a href="quest.html" class="dropdown-item">Kiểm tra kiến thức chống lừa đảo</a>
+                                <a href="knowledge.html" class="dropdown-item">Kho kiến thức căn bản</a>
+                            </div>
+                        </div>
+                        <a href="project.html" class="nav-item nav-link" style="color :black">Tin tức</a>
+                        <a href="install.html" class="nav-item nav-link" style="color :black">Tải về tiện ích</a>
+
                     </div>
-                    <div id="note" class="text-secondary d-none d-xl-flex"><small>Note: Hãy luôn cảnh giác trên không gian mạng</small></div>
-                    <div class="top-link">
-                        <a href="" class="bg-light nav-fill btn btn-sm-square rounded-circle"><i class="fab fa-facebook-f text-primary"></i></a>
-                        <a href="" class="bg-light nav-fill btn btn-sm-square rounded-circle"><i class="fab fa-twitter text-primary"></i></a>
-                        <a href="" class="bg-light nav-fill btn btn-sm-square rounded-circle"><i class="fab fa-instagram text-primary"></i></a>
-                        <a href="" class="bg-light nav-fill btn btn-sm-square rounded-circle me-0"><i class="fab fa-linkedin-in text-primary"></i></a>
+                </div>
+                <div class="d-none d-xl-flex flex-shirink-0">
+                    <div id="phone-tada" class="d-flex align-items-center justify-content-center me-4">
+                        <a href="" class="position-relative animated tada infinite">
+                            <i class="fa fa-phone-alt text-white fa-2x"></i>
+                            <div class="position-absolute" style="top: -7px; left: 20px;">
+                                <span><i class="fa fa-comment-dots text-secondary"></i></span>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="d-flex flex-column pe-4 border-end" style="margin-left: -13px;">
+                        <span class="text-dark-50" style="margin-right: -20px;">Have any questions?</span>
+                        <span class="text-secondary">Call: + 088 933 7917</span>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-center ms-4 ">
+                        <a href="#"><i class="bi bi-search text-white fa-2x"></i> </a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+    <!-- Navbar End -->
+    <div class="container-fluid services py-5 mb-5">
+        <div class="container">
+            <div class="text-center mx-auto pb-5 wow fadeIn" data-wow-delay=".3s" style="max-width: 600px;">
+                <h5 class="text-primary">Kiểm tra Nội dung Email</h5>
+                <h4 class="mt-3">Tính năng kiểm tra Email lừa đảo</h4>
+                <form method="post" action="/testemail.html" id="emailForm">
+                    <div class="mb-3">
+                        <label class="form-label">Nhập nội dung Email cần kiểm tra</label>
+                        <textarea class="form-control" name="emailText" rows="10"
+                            style="height: 400px;">{{ emailText }}</textarea>
+                        <button class="btn bg-primary text-white py-3 px-5 mt-3" type="submit">Kiểm tra</button>
+                    </div>
+                </form>
+                <p class="text-primary">{{ result2 }}</p>
+                <div id="myModal" class="modal">
+                    <span class="close">&times;</span>
+                    <div class="modal-content">
+                        <h1>Kết quả</h1>
+                        <p id="modalMessage"></p>
+                    </div>
+                </div>
+                <div id="waitingMessage" class="">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <h1 class="waiting-note">Đang xử lý...</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Services End -->
+    <div class="container-fluid services py-5 mb-5">
+        <div class="container">
+            <div class="text-center mx-auto pb-5 wow fadeIn" data-wow-delay=".3s" style="max-width: 600px;">
+                <h5 class="text-primary">Tính năng</h5>
+                <h2>Các tính năng chính của PhishCatcher</h2>
+            </div>
+            <div class="row g-5 services-inner">
+                <div class="col-md-6 col-lg-4 wow fadeIn" data-wow-delay=".3s">
+                    <div class="services-item bg-light">
+                        <div class="p-4 text-center services-content">
+                            <div class="services-content-icon">
+                                <i class="fas fa-user-secret fa-7x mb-4 text-primary"></i>
+                                <h4 class="mb-3">Phát hiện Cuộc gọi, Email và SĐT lừa đảo</h4>
+                                <p class="mb-4">PhishCatcher có khả năng phát hiện Voice, Email và SĐT giả mạo với độ chính xác cao, đảm bảo an toàn trên không gian mạng cho người dùng.</p>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 wow fadeIn" data-wow-delay=".5s">
+                    <div class="services-item bg-light">
+                        <div class="p-4 text-center services-content">
+                            <div class="services-content-icon">
+                                <i class="fa fa-envelope-open fa-7x mb-4 text-primary"></i>
+                                <h4 class="mb-3">Gửi báo cáo</h4>
+                                <p class="mb-4">PhishCatcher cho phép người dùng gửi báo cáo khi phát hiện một Voice
+                                    giả mạo. Những Voice này sẽ được phân tích xử lí nhằm mục đích thống kê và lập
+                                    tin tức.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 wow fadeIn" data-wow-delay=".7s">
+                    <div class="services-item bg-light">
+                        <div class="p-4 text-center services-content">
+                            <div class="services-content-icon">
+                                <i class="fas fa-laptop fa-7x mb-4 text-primary"></i>
+                                <h4 class="mb-3">SharkEyes - Phát hiện Website lừa đảo</h4>
+                                <p class="mb-4">Shark-Eyes mang lại khả năng phát hiện trang web lừa đảo với độ
+                                    chính xác cao, ngay cả trước các cuộc tấn công đối kháng. Mô hình này không chỉ
+                                    xuất sắc trong việc phát hiện website lừa đảo, mà còn hiệu quả trong voice
+                                    phishing và email phishing. Đặc biệt, mô hình AWG chúng tôi phát triển có khả
+                                    năng tạo mẫu đối kháng với tỷ lệ trốn tránh cao, chứng
+                                    minh rõ ràng hiệu suất vượt trội của mô hình Shark-Eyes.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- Topbar End -->
+    </div>
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-secondary btn-square rounded-circle back-to-top"><i
+            class="fa fa-arrow-up text-white"></i></a>
 
-        <!-- Navbar Start -->
-        <div class="container-fluid "style="background-color: #FFE4E1;">
-            <div class="container">
-                <nav class="navbar navbar-dark navbar-expand-lg py-0">
-                    <a href="index.html" class="navbar-brand d-flex align-items-center" style="align-items: center;">
-                        <img src="/static/logo/logotest2.png" alt="Logo" width="80" height="80" >
-                        <h1 class="text-dark fw-bold d-block">Phish<span class="text-secondary">Catcher</span> </h1>
-                    </a>
-                    <button type="button" class="navbar-toggler me-0" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse bg-transparent" id="navbarCollapse">
-                        <div class="navbar-nav ms-auto mx-xl-auto p-0">
-                            <a href="index.html" class="nav-item nav-link active text-secondary" style="color :black">Trang chủ</a>
-                            <a href="about.html" class="nav-item nav-link" style="color :black" >Giới thiệu</a>
-                            <div class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown " style="color :black">Tính năng</a>
-                                <div class="dropdown-menu rounded">
-                                    <a href="testemail.html" class="dropdown-item">Test Email </a>
-                                    <a href="service.html" class="dropdown-item">Test SĐT</a>
-                                    <a href="checkvishing.html" class="dropdown-item">Kiểm tra cuộc gọi lừa đảo</a>
-                                    <a href="report.html" class="dropdown-item">Mô hình Shark-Eyes</a>
-                                    <a href="thongke.html" class="dropdown-item">Thống kê</a>
-                                    <a href="blacklist.html" class="dropdown-item">Danh sách Phishing website</a>
-                                </div>
-                            </div>
-                            <div class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" style="color :black">Hữu ích</a>
-                                <div class="dropdown-menu rounded">
-                                    <a href="quest.html" class="dropdown-item">Kiểm tra kiến thức chống lừa đảo</a>
-                                    <a href="knowledge.html" class="dropdown-item">Kho kiến thức căn bản</a>
-                                </div>
-                            </div>
-                            <a href="project.html" class="nav-item nav-link" style="color :black">Tin tức</a>
-                            <a href="install.html" class="nav-item nav-link" style="color :black">Tải về tiện ích</a>
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-secondary btn-square rounded-circle back-to-top"><i
+            class="fa fa-arrow-up text-white"></i></a>
 
-                        </div>
-                    </div>
-                    <div class="d-none d-xl-flex flex-shirink-0">
-                        <div id="phone-tada" class="d-flex align-items-center justify-content-center me-4">
-                            <a href="" class="position-relative animated tada infinite">
-                                <i class="fa fa-phone-alt text-white fa-2x"></i>
-                                <div class="position-absolute" style="top: -7px; left: 20px;">
-                                    <span><i class="fa fa-comment-dots text-secondary"></i></span>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="d-flex flex-column pe-4 border-end" style="margin-left: -13px;">
-                            <span class="text-dark-50" style="margin-right: -20px;">Have any questions?</span>
-                            <span class="text-secondary" >Call: + 088 933 7917</span>
-                        </div>
-                        <div class="d-flex align-items-center justify-content-center ms-4 ">
-                            <a href="#"><i class="bi bi-search text-white fa-2x"></i> </a>
-                        </div>
-                    </div>
-                </nav>
-            </div>
-        </div>
-        <!-- Navbar End -->
-        <div class="container-fluid services py-5 mb-5">
-            <div class="container">
-                <div class="text-center mx-auto pb-5 wow fadeIn" data-wow-delay=".3s" style="max-width: 600px;">
-                    <h5 class="text-primary">Kiểm tra Nội dung Email</h5>
-                    <h4 class="mt-3">Tính năng kiểm tra Email giả mạo</h4>
-                    <form method="post" action="/testemail.html">
-                        <div class="mb-3">
-                            <label class="form-label">Nhập nội dung Email cần kiểm tra</label>
-                            <textarea class="form-control" name="emailText" rows="10" style="height: 400px;">{{ emailText }}</textarea>
-                            <button class="btn bg-primary text-white py-3 px-5 mt-3" type="submit">Kiểm tra</button>
-                        </div>
-                    </form>
-                    <p class="text-primary">{{ result2 }}</p>
-                </div>
-            </div>
-        </div>
-        <!-- Services End -->
-        <!-- Back to Top -->
-        <a href="#" class="btn btn-secondary btn-square rounded-circle back-to-top"><i class="fa fa-arrow-up text-white"></i></a>
 
-        <!-- Back to Top -->
-        <a href="#" class="btn btn-secondary btn-square rounded-circle back-to-top"><i class="fa fa-arrow-up text-white"></i></a>
+    <!-- JavaScript Libraries -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/lib/wow/wow.min.js"></script>
+    <script src="/static/lib/easing/easing.min.js"></script>
+    <script src="/static/lib/waypoints/waypoints.min.js"></script>
+    <script src="/static/lib/owlcarousel/owl.carousel.min.js"></script>
 
-        
-        <!-- JavaScript Libraries -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="/static/lib/wow/wow.min.js"></script>
-        <script src="/static/lib/easing/easing.min.js"></script>
-        <script src="/static/lib/waypoints/waypoints.min.js"></script>
-        <script src="/static/lib/owlcarousel/owl.carousel.min.js"></script>
+    <!-- Template Javascript -->
+    <script src="/static/js/main.js"></script>
 
-        <!-- Template Javascript -->
-        <script src="/static/js/main.js"></script>
-    </body>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('emailForm').addEventListener('submit', async function (event) {
+                event.preventDefault(); // Ngăn chặn form submit mặc định
+
+                // Lấy giá trị emailText từ textarea
+                var emailText = document.querySelector('textarea[name="emailText"]').value;
+                const waitingMessage = document.getElementById('waitingMessage');
+                const modal = document.getElementById('myModal');
+                const modalMessage = document.getElementById('modalMessage');
+                const closeModal = document.querySelector('.close');
+                // Hiển thị phần loading
+                waitingMessage.style.display = 'block';
+                modal.style.display = 'none';
+                // document.getElementById('result').classList.add('d-none');
+
+                // Gửi yêu cầu AJAX đến server
+                try {
+                    const response = await fetch('/testemail', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: new URLSearchParams({
+                            emailText: emailText
+                        })
+                    });
+                    const data = await response.json();
+                    // Ẩn phần loading và hiển thị kết quả ngay lập tức
+                    setTimeout(() => {
+                        waitingMessage.style.display = 'none';
+                        modal.style.display = 'block';
+                        modalMessage.innerText = data.result2;
+                    }, 1500);
+                } catch (error) {
+                    console.error('Error:', error);
+                    waitingMessage.style.display = 'none';
+                    modal.style.display = 'block';
+                    modalMessage.innerText = 'Đã xảy ra lỗi khi xử lý yêu cầu';
+                }
+
+                // Đóng modal khi nhấn vào nút close
+                closeModal.addEventListener('click', function() {
+                    modal.style.display = 'none';
+                });
+
+                // Đóng modal khi nhấn ra ngoài modal
+                window.addEventListener('click', function(event) {
+                    if (event.target == modal) {
+                        modal.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+    </script>
+</body>
 
 </html>
