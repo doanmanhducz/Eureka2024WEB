@@ -1,29 +1,29 @@
 import asyncio
 from truecallerpy import search_phonenumber
 
-phone_number = "02488811774"
-country_code = "VN"
-installation_id = "a1i0I--jMM3uXFb-ofc-ODmqyAGq8gHtLFxVeOdmifPv9kJWNeNABir5r72aykMM"
+def check_phone_number(phone_number):
+    # Kiểm tra nếu đầu vào không phải là số
+    if not phone_number.isdigit():
+        return "Số điện thoại không hợp lệ"
 
-response = asyncio.run(search_phonenumber(phone_number, country_code, installation_id))
-# print(response['data'][0]['name'])
+    country_code = "VN"
+    installation_id = "a1i0I--jMM3uXFb-ofc-ODmqyAGq8gHtLFxVeOdmifPv9kJWNeNABir5r72aykMM"
 
-# print(response)
-# Accessing the 'name' value
+    response = asyncio.run(search_phonenumber(phone_number, country_code, installation_id))
 
-try:
-    name_value = response['data']['data'][0]['name']
-    if name_value:
-        print(name_value)
-except KeyError:
-    # Handling the specific exception
-    name_value = "normal"
-    print(f"normal")
-
-
-print(name_value)
-
-# Printing the result
-# print("Name:", name_value)
-
-
+    try:
+        name_value = response['data']['data'][0]['name']
+        spam_score = response['data']['data'][0].get('spamScore', 0)
+        spam_type = response['data']['data'][0].get('spamType', 'Unknown')
+        
+        if spam_score > 0:
+            return f"Phishing Alert: {name_value} (Spam Score: {spam_score}, Spam Type: {spam_type})"
+        else:
+            return f"Name: {name_value}"
+    except KeyError:
+        return "Đây là SĐT Bình thường"
+    except IndexError:
+        return "Đây là SĐT Bình thường"
+    except Exception as e:
+        print("Exception:", e)
+        return "Đã xảy ra lỗi khi xử lý yêu cầu"
